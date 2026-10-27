@@ -11,6 +11,7 @@ This project trains machine learning models to detect brute force attacks (SSH/F
 3. Captures real traffic with Wireshark, turns it into flows with NFStream, and re-tests the models on it.
 4. Removes the port number as a feature, so the model learns behaviour instead of just "port 22 or 21".
 5. Reads Wazuh alerts and runs two detectors side by side: the ML model and a simple behavioural rule.
+6. Maps detections to MITRE ATT&CK technique T1110 (Brute Force).
 
 ## Results
 
