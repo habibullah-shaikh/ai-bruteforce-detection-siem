@@ -8,7 +8,7 @@ This project trains machine learning models to detect brute force attacks (SSH/F
 
 1. Trains and compares 6 ML algorithms on the CICIDS 2017 dataset.
 2. Compares the best model (Random Forest) against a simple rule-based detector.
-3. Captures real traffic with Wireshark, turns it into flows with NFStream, and re-tests the models on it.
+3. Captures real traffic with Wireshark, turns it into flows with NFStream, and retrains and tests the models on it.
 4. Removes the port number as a feature, so the model learns behaviour instead of just "port 22 or 21".
 5. Reads Wazuh alerts and runs two detectors side by side: the ML model and a simple behavioural rule.
 6. Maps detections to MITRE ATT&CK technique T1110 (Brute Force).
@@ -24,6 +24,7 @@ On CICIDS 2017 (Tuesday file: 445,909 rows, about 3.1% attacks):
 
 On my own captured traffic (792 flows: 275 normal, 517 attack):
 
+- All six models scored 98.6–100% F1 (Random Forest: 100%, 0 false positives) on a 159-flow test set. This is too easy to be meaningful: the simulated attack is very different from normal traffic.
 - Port number was the top feature (25.7% importance) in the first model.
 - After removing it and adding behavioural features, `src_ip_frequency` became the top feature.
 
@@ -90,6 +91,7 @@ Place `bruteforce_model.pkl` and `feature_names.pkl` in the same folder. The scr
 - The captured attack traffic is simulated with Python sockets, not a real attack tool, so the model results on it are optimistic.
 - CICIDS 2017 data is from a lab and may not match real networks. I used only one day of it.
 - The test on my own traffic is small (792 flows).
+- `src_ip_frequency` is calculated on the full dataset before the train/test split, so it partly leaks the answer (the attacker IP appears 174 times). It should be calculated on the training data only.
 
 ## Tools
 
